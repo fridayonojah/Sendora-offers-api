@@ -2,14 +2,12 @@
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /workspace
 
-# Resolve dependencies first so this layer is cached until pom.xml changes.
-# The cache mount keeps ~/.m2 between builds, so a flaky download only has to be retried, not restarted.
-COPY pom.xml .
-RUN --mount=type=cache,target=/root/.m2 \
-    mvn -B -q dependency:go-offline
-
+# The cache mount keeps ~/.m2 between builds, so dependencies are downloaded once and a
+# failed download resumes from what is already cached instead of starting over.
+#
 # Tests are skipped here: the integration tests use Testcontainers and need a Docker daemon,
 # which is not available inside a build. Run `mvn test` on the host or in CI instead.
+COPY pom.xml .
 COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 \
     mvn -B -q package -DskipTests
