@@ -1,0 +1,26 @@
+# Build output and tooling
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Secrets and local config: never send these into the build context or the image
+.env
+.env.*
+!.env.example
+
+# VCS / IDE
+.git
+.gitignore
+.gitattributes
+.idea
+.vscode
+.classpath
+.project
+.settings
+*.iml
+
+# Docker files themselves and docs are not needed in the image
+Dockerfile
+docker-compose*.yml
+.dockerignore
+README.md
+HELP.md
